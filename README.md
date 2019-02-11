@@ -14,6 +14,7 @@
 -	매일 해야하는 일들을 일일히 사람이 챙기기 어려움
 -	일일 배치로 편리하게 사용할 수 있는 툴
 -	crontab을 활용하여 원하는 시간에 배치 진행 (curator는 스케줄링 기능은 없음)
+-	[Elastic 자료](https://www.elastic.co/guide/en/elasticsearch/client/curator/current/index.html)
 
 <br>
 
@@ -313,6 +314,22 @@ actions:
 <br>
 
 ### warm data indices
+
+-	template 셋팅 확인
+
+```json
+GET _cat/templates
+
+PUT _template/mytemplate {
+	"index_patterns": ["*"],
+	"order" : 0,
+	"settings": {
+		"index.routing.allocation.require.box_type" : "hot"
+	}
+}
+
+GET _template/mytemplate
+```
 
 -	hot node에 있는 데이터를 warm node로 이동
 
