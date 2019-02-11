@@ -1,8 +1,17 @@
-Elasticsearch Curator
-=====================
-
 다양한 배치작업 가능케 하는 Curator
 -----------------------------------
+
+-	보관 기간이 넘은 인덱스 삭제
+-	인덱싱이 끝난 인덱스의 forcemerge (인덱스의 검색성능을 높이기 위해)
+-	warm data node로의 샤드 이동
+	-	ex: hot데이터노드로 한달동안 데이터를 밀어넣고, 총 6개월 서비스, 나머지 5개월은 warm데이터로 이동, 한달치가 다 찬이후로는 warm데이터를 hot데이터로 이동, 1달 후부터는 매일해야하는 작업
+-	매일 해야하는 일들을 일일히 사람이 챙기기 어려움
+-	일일 배치로 편리하게 사용할 수 있는 툴
+-	crontab을 활용하여 원하는 시간에 배치 진행 (curator는 스케줄링 기능은 없음)
+
+<br>
+
+### 설치
 
 -	python package manager pip을 통해 설치
 
@@ -50,7 +59,7 @@ logging:
 
 <br><br>
 
-#### 사전 준비
+### 사전 준비
 
 ```json
 POST test-2019-02-09/_doc
@@ -102,7 +111,9 @@ mkdir curator/logs
 touch es.log
 ```
 
-#### Add or remove indices (or both) from an alias
+<br>
+
+### Add or remove indices (or both) from an alias
 
 -	어제 index에 붙어있던 alias를 오늘로 옮기고 싶을때
 
@@ -149,7 +160,9 @@ $ curator --config config/es.config.yml action/alias-es.action.yml
 
 -	**참고: 위와 같이 해당 날짜에 인덱싱되었다면, source에 creation_date사용, 아니라면 source를 name으로 사용하고, timestring 추가**
 
-#### Close indices
+<br>
+
+### Close indices
 
 -	오랜기간 법적으로 5년 저장해야하는데, 실사용은 1개월, 1개월뒤 인덱스 close, 인덱스성능에 좋다.
 -	활성화 되어있는 인덱스를 close로 변경
@@ -191,7 +204,9 @@ actions:
       exclude:
 ```
 
-#### Delete indices
+<br>
+
+### Delete indices
 
 -	인덱스 삭제
 
@@ -217,7 +232,9 @@ actions:
       exclude:
 ```
 
-#### Open closed indices
+<br>
+
+### Open closed indices
 
 close된 인덱스를 open
 
@@ -241,7 +258,9 @@ actions:
       exclude:
 ```
 
-#### forceMerge indices
+<br>
+
+### forceMerge indices
 
 ```shell
 actions:
@@ -263,7 +282,9 @@ actions:
       exclude:
 ```
 
-#### rollover indices
+<br>
+
+### rollover indices
 
 -	특정상황에 따라 새로운 인덱스에 인덱싱
 
@@ -283,7 +304,9 @@ actions:
       disable_action: False
 ```
 
-#### warm data indices
+<br>
+
+### warm data indices
 
 -	hot node에 있는 데이터를 warm node로 이동
 
